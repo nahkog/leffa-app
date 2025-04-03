@@ -7,7 +7,6 @@ from redis_conn import redis_client
 from predictor import LeffaPredictor
 from cloudflare_uploader import upload_to_r2
 from PIL import Image
-import model_initializer  # Yol ayarlarını ve gerekli importları yükler
 
 
 # Çalışma klasörleri

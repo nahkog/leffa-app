@@ -9,45 +9,51 @@ from preprocess.openpose.run_openpose import OpenPose
 
 from PIL import Image
 import numpy as np
+import os
+
 
 class LeffaPredictor:
     def __init__(self):
+        
+        ckpts_root = os.path.join(os.path.dirname(__file__), "ckpts")
+
         self.mask_predictor = AutoMasker(
-            densepose_path="/workspace/ckpts/densepose",
-            schp_path="/workspace/ckpts/schp",
+            densepose_path=os.path.join(ckpts_root, "densepose"),
+            schp_path=os.path.join(ckpts_root, "schp"),
         )
 
+
         self.densepose_predictor = DensePosePredictor(
-            config_path="/workspace/ckpts/densepose/densepose_rcnn_R_50_FPN_s1x.yaml",
-            weights_path="/workspace/ckpts/densepose/model_final_162be9.pkl",
+            config_path=os.path.join(ckpts_root, "densepose", "densepose_rcnn_R_50_FPN_s1x.yaml"),
+            weights_path=os.path.join(ckpts_root, "densepose", "model_final_162be9.pkl"),
         )
 
         self.parsing = Parsing(
-            atr_path="/workspace/ckpts/humanparsing/parsing_atr.onnx",
-            lip_path="/workspace/ckpts/humanparsing/parsing_lip.onnx",
+            atr_path=os.path.join(ckpts_root, "humanparsing", "parsing_atr.onnx"),
+            lip_path=os.path.join(ckpts_root, "humanparsing", "parsing_lip.onnx"),
         )
 
         self.openpose = OpenPose(
-            body_model_path="/workspace/ckpts/openpose/body_pose_model.pth",
+            body_model_path=os.path.join(ckpts_root, "openpose", "body_pose_model.pth"),
         )
 
         self.vt_model_hd = LeffaModel(
-            pretrained_model_name_or_path="/workspace/ckpts/stable-diffusion-inpainting",
-            pretrained_model="/workspace/ckpts/virtual_tryon.pth",
+            pretrained_model_name_or_path=os.path.join(ckpts_root, "stable-diffusion-inpainting"),
+            pretrained_model=os.path.join(ckpts_root, "virtual_tryon.pth"),
             dtype="float16",
         )
         self.vt_inference_hd = LeffaInference(model=self.vt_model_hd)
 
         self.vt_model_dc = LeffaModel(
-            pretrained_model_name_or_path="/workspace/ckpts/stable-diffusion-inpainting",
-            pretrained_model="/workspace/ckpts/virtual_tryon_dc.pth",
+            pretrained_model_name_or_path=os.path.join(ckpts_root, "stable-diffusion-inpainting"),
+            pretrained_model=os.path.join(ckpts_root, "virtual_tryon_dc.pth"),
             dtype="float16",
         )
         self.vt_inference_dc = LeffaInference(model=self.vt_model_dc)
 
         self.pt_model = LeffaModel(
-            pretrained_model_name_or_path="/workspace/ckpts/stable-diffusion-xl-1.0-inpainting-0.1",
-            pretrained_model="/workspace/ckpts/pose_transfer.pth",
+            pretrained_model_name_or_path=os.path.join(ckpts_root, "stable-diffusion-xl-1.0-inpainting-0.1"),
+            pretrained_model=os.path.join(ckpts_root, "pose_transfer.pth"),
             dtype="float16",
         )
         self.pt_inference = LeffaInference(model=self.pt_model)
