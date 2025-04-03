@@ -14,15 +14,20 @@ from PIL import Image
 
 
 # Çalışma klasörleri
-UPLOAD_DIR = "uploads"
-OUTPUT_DIR = "output"
+BASE_DIR = os.path.dirname(__file__)
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+OUTPUT_DIR = os.path.join(BASE_DIR, "output")
+
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("uvicorn")
 
+logger.info("🧠 Predictor modeli yükleniyor...")
 predictor = LeffaPredictor()
+logger.info("✅ Predictor modeli yüklendi.")
+
 
 async def process_job(job_data: dict):
     task_id = job_data["task_id"]
@@ -71,7 +76,7 @@ async def process_job(job_data: dict):
         logger.info(f"✅ Görev tamamlandı: {task_id} - URL: {r2_url}")
 
         # Dosyayı sil
-        os.remove(output_path)
+        #os.remove(output_path)
 
     except Exception as e:
         error_message = f"❌ Görev başarısız: {task_id} - {str(e)}"

@@ -11,17 +11,14 @@ from PIL import Image
 import numpy as np
 import os
 
-
 class LeffaPredictor:
     def __init__(self):
-        
         ckpts_root = os.path.join(os.path.dirname(__file__), "ckpts")
 
         self.mask_predictor = AutoMasker(
             densepose_path=os.path.join(ckpts_root, "densepose"),
             schp_path=os.path.join(ckpts_root, "schp"),
         )
-
 
         self.densepose_predictor = DensePosePredictor(
             config_path=os.path.join(ckpts_root, "densepose", "densepose_rcnn_R_50_FPN_s1x.yaml"),
@@ -126,4 +123,7 @@ class LeffaPredictor:
             seed=seed,
             repaint=vt_repaint,
         )
-        return output["generated_image"][0], mask, densepose
+        generated_image = output["generated_image"][0]
+        if isinstance(generated_image, Image.Image):
+            generated_image = np.array(generated_image)
+        return generated_image, mask, densepose
