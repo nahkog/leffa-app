@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "3rdparty"))
+
 import asyncio
 import json
 import os
